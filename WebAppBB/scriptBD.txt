@@ -1,0 +1,60 @@
+﻿create database bb
+go
+use bb
+go
+
+create table categories(
+categoryid int primary key identity,
+description varchar(70) not null
+)
+insert into categories(description)
+values('Marketing'),('Products'),('Intentions')
+go
+create table subcategories(
+subcategoryid int primary key identity,
+description varchar(70) not null,
+categoryid int --references categories(categoryid)
+)
+insert into subcategories(description,categoryid)
+values('Flyers',1),('Brochures',1),('Social Media',1)
+,('Flags',2),('Posters',2),('Sphere Marketing',3)
+go
+create table interiorcategories(
+interiorcategoryid int primary key identity,
+description varchar(70) not null,
+subcategoryid int
+)
+insert into interiorcategories(description,subcategoryid)
+values('Listing',1),('Individual',2),('Facebook',3)
+go
+create table post(
+postId int primary key identity,
+title varchar(255) not null,
+url varchar(75) null,
+subtitle varchar(255) null,
+headline varchar(255) not null,
+author varchar(255) null,
+document_date datetime null,
+teaser varchar(5000) null,
+teaser_thumbnail varchar(500) null,
+use_only_homepage bit null,
+main_text text null,
+meta_description text null,
+image_span bit,
+image_align bit,
+image_wrap bit,
+wrap_text bit null,
+display int,
+homepage int,
+category_landing int
+)
+
+create table postcategories(
+postcategoriesId int primary key identity,
+postId int,
+categoryid int ,
+subcategoryid int,
+interiorcategoryid int
+)
+
+
