@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using WebAppBB.Dtos;
 using WebAppBB.Models;
 using WebAppBB.Services;
@@ -8,40 +7,22 @@ namespace WebAppBB.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PostsController : ControllerBase
+    public class SubCategoriesController : ControllerBase
     {
-        private readonly ContentService contentService;
+        private readonly SubCategoriesService _subCategoriesService;
 
-        public PostsController (ContentService _contentService) { 
-            contentService = _contentService; 
+        public SubCategoriesController(SubCategoriesService subCategoriesService)
+        {
+            _subCategoriesService = subCategoriesService;
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CreatePost([FromBody] Post request)
+        public async Task<IActionResult> CreateSubcategory([FromBody] Subcategory request)
         {
-            BaseResponse<Post> baseResponse = new BaseResponse<Post>();
+            BaseResponse<Subcategory> baseResponse = new BaseResponse<Subcategory>();
             try
             {
-                Post? result = await contentService.SavePost(request);
-                baseResponse.data = result;
-                baseResponse.status = StatusCodes.Status200OK;
-                return Ok(baseResponse);
-            }
-            catch (Exception ex)
-            {
-                baseResponse.message = ex.Message;
-                baseResponse.status = StatusCodes.Status500InternalServerError;
-                return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
-            }
-        }
-        
-        [HttpPut()]
-        public async Task<IActionResult> UpdatePost([FromBody] Post request)
-        {
-            BaseResponse<Post> baseResponse = new BaseResponse<Post>();
-            try
-            {
-                Post? result = await contentService.UpdatePost(request);
+                Subcategory? result = await _subCategoriesService.SaveSubcategory(request);
                 baseResponse.data = result;
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);
@@ -54,13 +35,32 @@ namespace WebAppBB.Controllers
             }
         }
 
-        [HttpDelete("/{postId}")]
-        public async Task<IActionResult> DeletePost(int postId)
+        [HttpPut()]
+        public async Task<IActionResult> UpdateSubcategory([FromBody] Subcategory request)
+        {
+            BaseResponse<Subcategory> baseResponse = new BaseResponse<Subcategory>();
+            try
+            {
+                Subcategory? result = await _subCategoriesService.UpdateSubcategory(request);
+                baseResponse.data = result;
+                baseResponse.status = StatusCodes.Status200OK;
+                return Ok(baseResponse);
+            }
+            catch (Exception ex)
+            {
+                baseResponse.message = ex.Message;
+                baseResponse.status = StatusCodes.Status500InternalServerError;
+                return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
+            }
+        }
+
+        [HttpDelete("/{subcategoryId}")]
+        public async Task<IActionResult> DeleteSubcategory(int subcategoryId)
         {
             BaseResponse<string> baseResponse = new BaseResponse<string>();
             try
             {
-                await contentService.DeletePost(postId);
+                await _subCategoriesService.DeleteSubcategory(subcategoryId);
                 baseResponse.data = "";
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);
@@ -72,14 +72,14 @@ namespace WebAppBB.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
             }
         }
-        
-        [HttpGet("/{postId}")]
-        public async Task<IActionResult> GetPost(int postId)
+
+        [HttpGet("/{subcategoryId}")]
+        public async Task<IActionResult> GetSubcategory(int subcategoryId)
         {
-            BaseResponse<Post> baseResponse = new BaseResponse<Post>();
+            BaseResponse<Subcategory> baseResponse = new BaseResponse<Subcategory>();
             try
             {
-                Post result = await contentService.GetPost(postId);
+                Subcategory result = await _subCategoriesService.GetSubcategory(subcategoryId);
                 baseResponse.data = result;
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);
@@ -91,13 +91,32 @@ namespace WebAppBB.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
             }
         }
-        [HttpGet()]
-        public async Task<IActionResult> GetAllPosts()
+        [HttpGet("/categories/{categoryId}")]
+        public async Task<IActionResult> GetAllSubcategoryByCategoryId(int categoryId)
         {
-            BaseResponse<List<PostListDto>> baseResponse = new BaseResponse<List<PostListDto>>();
+            BaseResponse<List<Subcategory>> baseResponse = new BaseResponse<List<Subcategory>>();
             try
             {
-                List<PostListDto>  result = await contentService.GetAllPosts();
+                List<Subcategory> result = await _subCategoriesService.GetAllSubcategoryByCategoryId(categoryId);
+                baseResponse.data = result;
+                baseResponse.status = StatusCodes.Status200OK;
+                return Ok(baseResponse);
+            }
+            catch (Exception ex)
+            {
+                baseResponse.message = ex.Message;
+                baseResponse.status = StatusCodes.Status500InternalServerError;
+                return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
+            }
+        }
+
+        [HttpGet()]
+        public async Task<IActionResult> GetAllActiveSubcategories()
+        {
+            BaseResponse<List<Subcategory>> baseResponse = new BaseResponse<List<Subcategory>>();
+            try
+            {
+                List<Subcategory> result = await _subCategoriesService.GetAllActiveSubcategories();
                 baseResponse.data = result;
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);

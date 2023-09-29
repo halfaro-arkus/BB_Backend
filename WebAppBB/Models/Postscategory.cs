@@ -14,6 +14,8 @@ public partial class Postscategory
     public int? Subcategoryid { get; set; }
 
     public int? Interiorcategoryid { get; set; }
+    
+    public bool? active { get; set; }
 
     //public virtual Post? Post { get; set; }
 }

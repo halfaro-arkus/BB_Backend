@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using WebAppBB.Dtos;
 using WebAppBB.Models;
 using WebAppBB.Services;
@@ -8,40 +7,22 @@ namespace WebAppBB.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PostsController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        private readonly ContentService contentService;
+        private readonly CategoriesService _CategoriesService;
 
-        public PostsController (ContentService _contentService) { 
-            contentService = _contentService; 
+        public CategoriesController(CategoriesService CategoriesService)
+        {
+            _CategoriesService = CategoriesService;
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CreatePost([FromBody] Post request)
+        public async Task<IActionResult> CreateCategory([FromBody] Category request)
         {
-            BaseResponse<Post> baseResponse = new BaseResponse<Post>();
+            BaseResponse<Category> baseResponse = new BaseResponse<Category>();
             try
             {
-                Post? result = await contentService.SavePost(request);
-                baseResponse.data = result;
-                baseResponse.status = StatusCodes.Status200OK;
-                return Ok(baseResponse);
-            }
-            catch (Exception ex)
-            {
-                baseResponse.message = ex.Message;
-                baseResponse.status = StatusCodes.Status500InternalServerError;
-                return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
-            }
-        }
-        
-        [HttpPut()]
-        public async Task<IActionResult> UpdatePost([FromBody] Post request)
-        {
-            BaseResponse<Post> baseResponse = new BaseResponse<Post>();
-            try
-            {
-                Post? result = await contentService.UpdatePost(request);
+                Category? result = await _CategoriesService.SaveCategory(request);
                 baseResponse.data = result;
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);
@@ -54,13 +35,32 @@ namespace WebAppBB.Controllers
             }
         }
 
-        [HttpDelete("/{postId}")]
-        public async Task<IActionResult> DeletePost(int postId)
+        [HttpPut()]
+        public async Task<IActionResult> UpdateCategory([FromBody] Category request)
+        {
+            BaseResponse<Category> baseResponse = new BaseResponse<Category>();
+            try
+            {
+                Category? result = await _CategoriesService.UpdateCategory(request);
+                baseResponse.data = result;
+                baseResponse.status = StatusCodes.Status200OK;
+                return Ok(baseResponse);
+            }
+            catch (Exception ex)
+            {
+                baseResponse.message = ex.Message;
+                baseResponse.status = StatusCodes.Status500InternalServerError;
+                return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
+            }
+        }
+
+        [HttpDelete("/{CategoryId}")]
+        public async Task<IActionResult> DeleteCategory(int CategoryId)
         {
             BaseResponse<string> baseResponse = new BaseResponse<string>();
             try
             {
-                await contentService.DeletePost(postId);
+                await _CategoriesService.DeleteCategory(CategoryId);
                 baseResponse.data = "";
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);
@@ -72,14 +72,14 @@ namespace WebAppBB.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
             }
         }
-        
-        [HttpGet("/{postId}")]
-        public async Task<IActionResult> GetPost(int postId)
+
+        [HttpGet("/{CategoryId}")]
+        public async Task<IActionResult> GetCategory(int CategoryId)
         {
-            BaseResponse<Post> baseResponse = new BaseResponse<Post>();
+            BaseResponse<Category> baseResponse = new BaseResponse<Category>();
             try
             {
-                Post result = await contentService.GetPost(postId);
+                Category result = await _CategoriesService.GetCategory(CategoryId);
                 baseResponse.data = result;
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);
@@ -92,12 +92,31 @@ namespace WebAppBB.Controllers
             }
         }
         [HttpGet()]
-        public async Task<IActionResult> GetAllPosts()
+        public async Task<IActionResult> GetAllCategories()
         {
-            BaseResponse<List<PostListDto>> baseResponse = new BaseResponse<List<PostListDto>>();
+            BaseResponse<List<Category>> baseResponse = new BaseResponse<List<Category>>();
             try
             {
-                List<PostListDto>  result = await contentService.GetAllPosts();
+                List<Category> result = await _CategoriesService.GetAllCategories();
+                baseResponse.data = result;
+                baseResponse.status = StatusCodes.Status200OK;
+                return Ok(baseResponse);
+            }
+            catch (Exception ex)
+            {
+                baseResponse.message = ex.Message;
+                baseResponse.status = StatusCodes.Status500InternalServerError;
+                return StatusCode(StatusCodes.Status500InternalServerError, baseResponse);
+            }
+        }
+
+        [HttpGet("/manage")]
+        public async Task<IActionResult> GetManageContentCategories()
+        {
+            BaseResponse<ContentCategoriesResponse> baseResponse = new BaseResponse<ContentCategoriesResponse>();
+            try
+            {
+                ContentCategoriesResponse result = await _CategoriesService.GetManageContentCategories();
                 baseResponse.data = result;
                 baseResponse.status = StatusCodes.Status200OK;
                 return Ok(baseResponse);

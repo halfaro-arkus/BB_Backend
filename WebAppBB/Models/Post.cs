@@ -42,6 +42,11 @@ public partial class Post
     public int? Homepage { get; set; }
 
     public int? CategoryLanding { get; set; }
-
+    public DateTime? created { get; set; }
+    public DateTime? modified { get; set; }
     public virtual ICollection<Postscategory> Postscategories { get; set; } = new List<Postscategory>();
+
+    
+
+
 }

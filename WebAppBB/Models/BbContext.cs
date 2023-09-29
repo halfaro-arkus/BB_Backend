@@ -24,7 +24,7 @@ public partial class BbContext : DbContext
     public DbSet<Postscategory> Postscategories { get; set; }
 
     public DbSet<Subcategory> Subcategories { get; set; }
-        
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>

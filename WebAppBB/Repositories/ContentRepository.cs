@@ -15,7 +15,9 @@ namespace WebAppBB.Repositories
         public async Task<Post?> SavePost(Post request)
         {
             try
-            {               
+            {  
+                request.created = DateTime.Now;
+                request.modified = DateTime.Now;
                 _bbContext.Posts.Add(request);
                 _bbContext.SaveChanges();
 
@@ -72,14 +74,18 @@ namespace WebAppBB.Repositories
             {
                 return (from a in _bbContext.Posts
                         join ca in _bbContext.Postscategories on a.PostId equals ca.PostId
-                        join c in _bbContext.Categories on ca.Categoryid equals c.Categoryid
+                        join c in _bbContext.Categories on ca.Categoryid equals c.Categoryid                        
                         select new PostListDto
                         {
                             PostId = a.PostId,
                             title= a.Title,
                             Display = a.Display==0? "Hidden": "On Display",
-                            category = c.Description
+                            category = c.Description,
+                            created = a.created,
+                            modified= a.modified
                         })
+                        .OrderByDescending(p => p.created)
+                        .OrderByDescending(p => p.modified)
                     .ToList();
             }
             catch (Exception ex)

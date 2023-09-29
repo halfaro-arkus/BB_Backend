@@ -7,7 +7,11 @@ namespace WebAppBB.Configure
     {
         public static void AddBbConfigure(this IServiceCollection services, IConfiguration configuration) 
         {
-            services.AddContent(configuration);            
+            services.AddContent(configuration);
+            services.AddSubCategories(configuration);
+            services.AddInteriorCategories(configuration);
+            services.AddCategories(configuration);
+
         }
     }
 }

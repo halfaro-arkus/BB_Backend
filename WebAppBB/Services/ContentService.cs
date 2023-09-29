@@ -27,6 +27,7 @@ namespace WebAppBB.Services
         {
             try
             {
+                request.modified = DateTime.Now;
                 return await _contentRepository.UpdatePost(request);
             }
             catch (Exception ex)
